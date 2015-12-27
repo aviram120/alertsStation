@@ -2,7 +2,7 @@ from google.appengine.ext import ndb
 import json
 
 class Agency(ndb.Model):
-    agency_id=ndb.StringProperty()
+    agency_id=ndb.IntegerProperty()
     agency_name=ndb.StringProperty()
 
     @staticmethod

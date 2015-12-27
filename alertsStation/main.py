@@ -1,6 +1,6 @@
 from models.agencyDB import Agency
 import webapp2
-
+#http://alertsstation-1172.appspot.com/agency?id=2
 class MainHandler(webapp2.RequestHandler):
     def get(self):#agency?id=1
         id=self.request.get('id')
@@ -12,6 +12,9 @@ class MainHandler(webapp2.RequestHandler):
                 for line in fo:
                    words = line.split(",")
                    agID=words[0]
+                   agID=agID.strip()
+                   agID=int(agID)
+
                    agName=words[1]
                    addRow=Agency(agency_id=agID,agency_name=agName)
                    addRow.put()
