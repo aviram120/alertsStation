@@ -1,25 +1,30 @@
-#!/usr/bin/env python
-#
-# Copyright 2007 Google Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+from models.agencyDB import Agency
 import webapp2
 
 class MainHandler(webapp2.RequestHandler):
-    def get(self):
-        self.response.write('Hello world!')
+    def get(self):#agency?id=1
+        id=self.request.get('id')
+        if (id!=""):
+            id=id.strip()
+            id=int(id)
+            if (id==1):#read data from file to DB
+                fo = open("agency.txt", "r")
+                for line in fo:
+                   words = line.split(",")
+                   agID=words[0]
+                   agName=words[1]
+                   addRow=Agency(agency_id=agID,agency_name=agName)
+                   addRow.put()
+                fo.close()
+                self.post("add to DB all file")
+            if (id==2):#get all DB
+                agency=Agency.getAllAgency()
+                self.post(agency)
+
+
+    def post(self,response):
+        self.response.write(response)
 
 app = webapp2.WSGIApplication([
-    ('/', MainHandler)
+    ('/agency', MainHandler)
 ], debug=True)
