@@ -1,5 +1,6 @@
 from google.appengine.ext import ndb
 import json
+import codecs
 
 class Trips(ndb.Model):
     route_id = ndb.IntegerProperty()
@@ -8,7 +9,7 @@ class Trips(ndb.Model):
 
     @staticmethod
     def readFromGtfsTrips():
-        fo = open('./resources/trips.txt', "r")
+        fo = codecs.open('./resources/trips.txt', "r", "utf-8-sig")
         for line in fo:
             words = line.split(",")
 
@@ -24,7 +25,7 @@ class Trips(ndb.Model):
             direction_id_loc = direction_id_loc.strip()
             direction_id_loc = int(direction_id_loc)
 
-            addRow=Routes(route_id=route_id_loc, trip_id=trip_id_loc, direction_id = direction_id_loc)
+            addRow=Trips(route_id=route_id_loc, trip_id=trip_id_loc, direction_id = direction_id_loc)
             addRow.put()
         fo.close()
 

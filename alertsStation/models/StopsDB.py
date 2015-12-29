@@ -1,5 +1,7 @@
 from google.appengine.ext import ndb
 import json
+import logging
+import codecs
 
 class Stops(ndb.Model):
     stop_id = ndb.IntegerProperty()
@@ -9,22 +11,22 @@ class Stops(ndb.Model):
 
     @staticmethod
     def readFromGtfsStops():
-        fo = open('./resources/stops.txt', "r")
+        fo = codecs.open('./resources/stops.txt', "r", "utf-8-sig")
         for line in fo:
-                       words = line.split(",")
+            words = line.split(",")
 
-                       stop_id_loc = words[0]
-                       stop_id_loc = stop_id_loc.strip()
-                       stop_id_loc = int(stop_id_loc)
+            stop_id_loc = words[0]
+            stop_id_loc = stop_id_loc.strip()
+            stop_id_loc = int(stop_id_loc)
 
-                       stop_name_loc = words[2]                    				   
-                       stop_lat_loc = words[4]
-                       stop_lon_loc = words[5]
-                       
+            stop_name_loc = words[2]
+            stop_lat_loc = words[4]
+            stop_lon_loc = words[5]
 
-                   
-                       addRow=Stops(stop_id=stop_id_loc, stop_name=stop_name_loc, stop_lat = stop_lat_loc, stop_lon = stop_lon_loc)
-                       addRow.put()
+
+
+            addRow=Stops(stop_id=stop_id_loc, stop_name=stop_name_loc, stop_lat = stop_lat_loc, stop_lon = stop_lon_loc)
+            addRow.put()
         fo.close()
 
     @staticmethod

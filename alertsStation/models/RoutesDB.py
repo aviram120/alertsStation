@@ -1,5 +1,6 @@
 from google.appengine.ext import ndb
 import json
+import codecs
 
 class Routes(ndb.Model):
     route_id = ndb.IntegerProperty()
@@ -11,7 +12,7 @@ class Routes(ndb.Model):
 
     @staticmethod
     def readFromGtfsRoutes():
-        fo = open('./resources/routes.txt', "r")
+        fo = codecs.open('./resources/routes.txt', "r", "utf-8-sig")
         for line in fo:
             words = line.split(",")
 
