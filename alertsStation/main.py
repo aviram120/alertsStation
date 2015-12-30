@@ -5,28 +5,28 @@ from models.StopTimeDB import StopTime
 from models.StopsDB import Stops
 import logging
 import webapp2
-#http://alertsstation-1172.appspot.com/agency?id=2
+#http://alertsstation-1172.appspot.com/api?id=2
 class MainHandler(webapp2.RequestHandler):
     def get(self):#agency?id=1
         id=self.request.get('id')
         num=self.request.get('num')
+        act=self.request.get('act')
+
+        if (act!=""):#/api&act=1
+            act=act.strip()
+            act=int(act)
+            if (act==1):#get all agency
+                allAgency=Agency.getAllAgency()
+                self.post(allAgency)
+
+
 
         if (id!=""):
             id=id.strip()
             id=int(id)
             if (id==1):#read data from file to DB
-                fo = open("agency.txt", "r")
-                for line in fo:
-                   words = line.split(",")
-                   agID=words[0]
-                   agID=agID.strip()
-                   agID=int(agID)
-
-                   agName=words[1]
-                   addRow=Agency(agency_id=agID,agency_name=agName)
-                   addRow.put()
-                fo.close()
-                self.post("add to DB all file")
+                agency=Agency.readFromGtfsAgency()
+                self.post("read from file agency")
             if (id==2):#get all DB
                 agency=Agency.getAllAgency()
                 self.post(agency)

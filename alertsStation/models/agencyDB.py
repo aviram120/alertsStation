@@ -1,9 +1,24 @@
 from google.appengine.ext import ndb
 import json
+import codecs
 
 class Agency(ndb.Model):
     agency_id=ndb.IntegerProperty()
     agency_name=ndb.StringProperty()
+
+    @staticmethod
+    def readFromGtfsAgency():
+        fo = codecs.open('./resources/agency.txt', "r", "utf-8-sig")
+        for line in fo:
+           words = line.split(",")
+           agID=words[0]
+           agID=agID.strip()
+           agID=int(agID)
+
+           agName=words[1]
+           addRow=Agency(agency_id=agID,agency_name=agName)
+           addRow.put()
+        fo.close()
 
     @staticmethod
     def getAllAgency():
