@@ -19,6 +19,15 @@ class Agency(ndb.Model):
         reply_json=json.dumps(list,ensure_ascii=False)
 
         return reply_json
+    @staticmethod
+    def test(num):
+        q=Agency.query(Agency.agency_id==num)
+        for res in q:
+            if res is not None:
+                return res.agency_name
+
+
+        return "no result"
 
 
 

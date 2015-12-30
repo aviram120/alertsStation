@@ -9,6 +9,8 @@ import webapp2
 class MainHandler(webapp2.RequestHandler):
     def get(self):#agency?id=1
         id=self.request.get('id')
+        num=self.request.get('num')
+
         if (id!=""):
             id=id.strip()
             id=int(id)
@@ -52,6 +54,10 @@ class MainHandler(webapp2.RequestHandler):
             if (id == 10):#get all DB
                 stopTime = StopTime.getAllStopTime()
                 self.post(stopTime)
+            if (id == 11):#get all DB
+                num=num.strip()
+                num=int(num)
+                self.post(Agency.test(num))
 
     def post(self,response):
         self.response.write(response)
