@@ -10,14 +10,29 @@ class MainHandler(webapp2.RequestHandler):
     def get(self):#agency?id=1
         id=self.request.get('id')
         num=self.request.get('num')
-        act=self.request.get('act')
 
-        if (act!=""):#/api&act=1
+        act=self.request.get('act')
+        agency_id=self.request.get('agency_id')
+
+        if (act!=""):
             act=act.strip()
             act=int(act)
+
+            #/api&act=1
             if (act==1):#get all agency
                 allAgency=Agency.getAllAgency()
                 self.post(allAgency)
+
+            #/api?act=2&agency_id=
+            if (act==2):#get all city for agency
+                if (agency_id!=""):
+                    agency_id=agency_id.strip()
+                    agency_id=int(agency_id)
+
+                    cityByAgencyID=Routes.getAllCityByAgencyID(agency_id)
+                    self.post(cityByAgencyID)
+
+
 
 
 

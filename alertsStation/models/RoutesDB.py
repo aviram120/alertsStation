@@ -59,4 +59,21 @@ class Routes(ndb.Model):
 
         return reply_json
 
+    @staticmethod
+    def getAllCityByAgencyID(agency_id):
+        list=[]
+        routes=Routes.query(Routes.agency_id==agency_id)
+        for resRout in routes:
+            tempRoutes = {}
+            if resRout is not None:
+                tempRoutes['city_name']=resRout.route_id#TODO-- need to replace "route_id" to "city_name"
+                list.append(tempRoutes)
+
+        reply_json=json.dumps(list,ensure_ascii=False)
+        return reply_json
+
+
+
+
+
 
