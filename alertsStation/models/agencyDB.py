@@ -40,7 +40,12 @@ class Agency(ndb.Model):
         for res in q:
             if res is not None:
                 return res.agency_name
-
+    @staticmethod
+    def test2(ag_name):
+        res=Agency.query(Agency.agency_name==ag_name)
+        for res2 in res:
+            if res2 is not None:
+                return res2.agency_id
 
         return "no result"
 

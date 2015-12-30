@@ -13,24 +13,48 @@ class MainHandler(webapp2.RequestHandler):
 
         act=self.request.get('act')
         agency_id=self.request.get('agency_id')
+        city_name=self.request.get('city_name')
+        route_id=self.request.get('route_id')
+
 
         if (act!=""):
             act=act.strip()
             act=int(act)
 
-            #/api&act=1
+
+            #/api?act=1
             if (act==1):#get all agency
                 allAgency=Agency.getAllAgency()
                 self.post(allAgency)
 
             #/api?act=2&agency_id=
-            if (act==2):#get all city for agency
+            elif (act==2):#get all city for agency
                 if (agency_id!=""):
                     agency_id=agency_id.strip()
                     agency_id=int(agency_id)
 
                     cityByAgencyID=Routes.getAllCityByAgencyID(agency_id)
                     self.post(cityByAgencyID)
+
+            #/api?act=3&agency_id=xxx&city_name=xxx
+            elif (act==3):#get route_shirt_name, route_id
+                if (agency_id!=""):
+                    agency_id=agency_id.strip()
+                    agency_id=int(agency_id)
+                    if (city_name!=""):
+                        #TODO
+                        return
+
+            #/api?act=4&route_id=xxx
+            elif (act==4):#get stop_name,stop_lan,stop_lon,stop_sequnce
+                if (route_id!=""):
+                    route_id=route_id.strip()
+                    route_id=int(route_id)
+                    #TODO
+                    return
+
+
+
 
 
 
@@ -73,6 +97,7 @@ class MainHandler(webapp2.RequestHandler):
                 num=num.strip()
                 num=int(num)
                 self.post(Agency.test(num))
+
 
     def post(self,response):
         self.response.write(response)
