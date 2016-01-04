@@ -2,4 +2,8 @@
 <resources>
     <style name="AppTheme" parent="android:Theme.Material.Light">
     </style>
+    Raised Light/Light theme
+    <style name="Base.ThemeOverlay.AppCompat.Dark">
+        <item name="android:textSize">30sp</item>
+    </style>
 </resources>
