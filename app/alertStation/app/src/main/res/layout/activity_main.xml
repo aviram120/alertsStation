@@ -15,7 +15,7 @@
         android:layout_centerHorizontal="true" />
 
     <LinearLayout
-        
+
         android:divider="?android:dividerHorizontal"
         android:showDividers="middle"
         android:weightSum="8"
