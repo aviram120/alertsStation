@@ -67,3 +67,4 @@ $RECYCLE.BIN/
 /.idea
 *.pyc
 .idea/*
+/edit_text
