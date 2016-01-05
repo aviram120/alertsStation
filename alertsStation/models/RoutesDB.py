@@ -9,10 +9,11 @@ class Routes(ndb.Model):
     route_long_name = ndb.StringProperty()
     route_desc = ndb.StringProperty()
     route_type = ndb.IntegerProperty()
+    city_name = ndb.StringProperty()
 
     @staticmethod
     def readFromGtfsRoutes():
-        fo = codecs.open('./resources/routes.txt', "r", "utf-8-sig")
+        fo = codecs.open('./resources/new_routes.txt', "r", "utf-8-sig")
         for line in fo:
             words = line.split(",")
 
@@ -34,8 +35,10 @@ class Routes(ndb.Model):
             route_type_loc = route_type_loc.strip()
             route_type_loc = int(route_type_loc)
 
+            city_name_loc = words[6]
+
             addRow=Routes(route_id=route_id_loc, agency_id=agency_id_loc, route_short_name = route_short_name_loc,
-                         route_long_name = route_long_name_loc, route_desc = route_desc_loc, route_type = route_type_loc)
+                         route_long_name = route_long_name_loc, route_desc = route_desc_loc, route_type = route_type_loc, city_name = city_name_loc)
             addRow.put()
 
         fo.close()

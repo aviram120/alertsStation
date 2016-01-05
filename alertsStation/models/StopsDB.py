@@ -11,7 +11,7 @@ class Stops(ndb.Model):
 
     @staticmethod
     def readFromGtfsStops():
-        fo = codecs.open('./resources/stops.txt', "r", "utf-8-sig")
+        fo = codecs.open('./resources/new_stops.txt', "r", "utf-8-sig")
         for line in fo:
             words = line.split(",")
 
@@ -19,9 +19,9 @@ class Stops(ndb.Model):
             stop_id_loc = stop_id_loc.strip()
             stop_id_loc = int(stop_id_loc)
 
-            stop_name_loc = words[2]
-            stop_lat_loc = words[4]
-            stop_lon_loc = words[5]
+            stop_name_loc = words[1]
+            stop_lat_loc = words[2]
+            stop_lon_loc = words[3]
 
 
 

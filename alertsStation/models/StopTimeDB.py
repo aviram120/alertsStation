@@ -9,7 +9,7 @@ class StopTime(ndb.Model):
 
     @staticmethod
     def readFromGtfsStopTime():
-        fo = codecs.open('./resources/stop_times.txt', "r", "utf-8-sig")
+        fo = codecs.open('./resources/new_stop_times.txt', "r", "utf-8-sig")
         for line in fo:
             words = line.split(",")
 
@@ -17,11 +17,11 @@ class StopTime(ndb.Model):
             trip_id_loc = trip_id_loc.strip()
             trip_id_loc = int(trip_id_loc)
 
-            stop_id_loc = words[3]
+            stop_id_loc = words[1]
             stop_id_loc = stop_id_loc.strip()
             stop_id_loc = int(stop_id_loc)
 
-            stop_sequence_loc = words[4]
+            stop_sequence_loc = words[2]
             stop_sequence_loc = stop_sequence_loc.strip()
             stop_sequence_loc = int(stop_sequence_loc)
 

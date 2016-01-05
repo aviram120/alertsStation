@@ -8,7 +8,7 @@ class Agency(ndb.Model):
 
     @staticmethod
     def readFromGtfsAgency():
-        fo = codecs.open('./resources/agency.txt', "r", "utf-8-sig")
+        fo = codecs.open('./resources/new_agency.txt', "r", "utf-8-sig")
         for line in fo:
            words = line.split(",")
            agID=words[0]

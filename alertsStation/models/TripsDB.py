@@ -4,12 +4,12 @@ import codecs
 
 class Trips(ndb.Model):
     route_id = ndb.IntegerProperty()
-    trip_id = ndb.IntegerProperty()
+    trip_id = ndb.StringProperty()
     direction_id = ndb.IntegerProperty()
 
     @staticmethod
     def readFromGtfsTrips():
-        fo = codecs.open('./resources/trips.txt', "r", "utf-8-sig")
+        fo = codecs.open('./resources/new_trips.txt', "r", "utf-8-sig")
         for line in fo:
             words = line.split(",")
 
@@ -17,11 +17,9 @@ class Trips(ndb.Model):
             route_id_loc = route_id_loc.strip()
             route_id_loc = int(route_id_loc)
 
-            trip_id_loc = words[2]
-            trip_id_loc = trip_id_loc.strip()
-            trip_id_loc = int(trip_id_loc)
+            trip_id_loc = words[1]
 					   
-            direction_id_loc = words[3]
+            direction_id_loc = words[2]
             direction_id_loc = direction_id_loc.strip()
             direction_id_loc = int(direction_id_loc)
 

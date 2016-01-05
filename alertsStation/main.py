@@ -5,6 +5,8 @@ from models.StopTimeDB import StopTime
 from models.StopsDB import Stops
 import logging
 import webapp2
+from google.appengine.ext import ndb
+
 #http://alertsstation-1172.appspot.com/api?id=2
 class MainHandler(webapp2.RequestHandler):
     def get(self):#agency?id=1
@@ -71,6 +73,11 @@ class MainHandler(webapp2.RequestHandler):
                 self.post(agency)
             if (id == 3):#read data from file to DB
                 route = Routes.readFromGtfsRoutes()
+                '''
+                #delete all Routes
+                routes_keys = Routes.query().fetch(keys_only=True)
+                ndb.delete_multi(routes_keys)
+                '''
                 self.post("read from file route")
             if (id == 4):#get all DB
                 route = Routes.getAllRoutes()
