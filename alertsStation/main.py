@@ -3,6 +3,7 @@ from models.RoutesDB import Routes
 from models.TripsDB import Trips
 from models.StopTimeDB import StopTime
 from models.StopsDB import Stops
+from models.TbFileDB import Tb_file
 import logging
 import webapp2
 from google.appengine.ext import ndb
@@ -55,13 +56,6 @@ class MainHandler(webapp2.RequestHandler):
                     #TODO
                     return
 
-
-
-
-
-
-
-
         if (id!=""):
             id=id.strip()
             id=int(id)
@@ -104,7 +98,12 @@ class MainHandler(webapp2.RequestHandler):
                 num=num.strip()
                 num=int(num)
                 self.post(Agency.test(num))
-
+            if (id == 12):#get all DB
+                tbFile = Tb_file.putDataToModel(48)
+                self.post(tbFile)
+            if (id == 13):#delete all stoptime
+                StopTime.deleteAllStopTime()
+                self.post("delete all stopTime")
 
     def post(self,response):
         self.response.write(response)

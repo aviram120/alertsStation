@@ -1,5 +1,6 @@
 import codecs
 import re
+import itertools
 
 
 #-------delete first line-------
@@ -251,3 +252,21 @@ inputFile.close()
 print "end stops"
 '''
 #-------end stops-------
+
+
+
+#-------split new_stop_times-------
+'''
+print "split new_stop_times"
+
+inputFile = codecs.open('./resources/new_stop_times.txt', "r", "utf-8-sig")
+readLine = inputFile.readlines()
+for i in range(0,48):
+    outputFile = codecs.open('./resources/stop_times_directory/stop_times_'+str(i)+'.txt', "wb", "utf-8-sig")
+    for j in range(((i * 80000) + 1), ((i+1) * 80000)+1):
+        print j
+        outputFile.write(readLine[j-1])
+
+print "end split new_stop_times"
+'''
+#-------end split new_stop_times-------
