@@ -45,16 +45,17 @@ class MainHandler(webapp2.RequestHandler):
                     agency_id=agency_id.strip()
                     agency_id=int(agency_id)
                     if (city_name!=""):
-                        #TODO
-                        return
+                        routesIdName=Routes.getAllRoutesByAgencyCity(agency_id,city_name)
+                        self.post(routesIdName)
 
             #/api?act=4&route_id=xxx
             elif (act==4):#get stop_name,stop_lan,stop_lon,stop_sequnce
                 if (route_id!=""):
                     route_id=route_id.strip()
                     route_id=int(route_id)
-                    #TODO
-                    return
+                    stopsLocation=Trips.getAllStpsByRoutID(route_id)
+                    self.post(stopsLocation)
+
 
         if (id!=""):
             id=id.strip()

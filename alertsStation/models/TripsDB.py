@@ -2,6 +2,9 @@ from google.appengine.ext import ndb
 import json
 import codecs
 
+from models.StopTimeDB import StopTime
+from models.StopsDB import Stops
+
 class Trips(ndb.Model):
     route_id = ndb.IntegerProperty()
     trip_id = ndb.StringProperty()
@@ -41,3 +44,30 @@ class Trips(ndb.Model):
 
         reply_json=json.dumps(list,ensure_ascii=False)
         return reply_json
+
+    @staticmethod
+    def getAllStpsByRoutID(rout_id):
+        list=[]
+
+        trip_idRow=Trips.query(Trips.route_id==rout_id)
+
+        stopTime=StopTime.query(StopTime.trip_id==trip_idRow.trip_id)
+
+        for stopTimesID in stopTime:
+            stops=Stops.query(Stops.stop_id==stopTimesID.stop_id)
+            temp = {}
+
+            temp['stop_sequence']=stopTimesID.stop_sequence
+            temp['stop_name']=stops.stop_name
+            temp['stop_lat']=stops.stop_lat
+            temp['stop_lon']=stops.stop_lon
+            list.append(temp)
+
+        reply_json=json.dumps(list,ensure_ascii=False)
+        return reply_json
+
+
+
+
+
+
