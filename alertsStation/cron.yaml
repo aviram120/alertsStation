@@ -1,4 +1,4 @@
 cron:
 - description: read stop times
   url: /stop_times_cron
-  schedule: every 100 hours
+  schedule: every 1000 hours

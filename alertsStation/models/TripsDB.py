@@ -12,7 +12,7 @@ class Trips(ndb.Model):
 
     @staticmethod
     def readFromGtfsTrips():
-        fo = codecs.open('./resources/new_trips.txt', "r", "utf-8-sig")
+        fo = codecs.open('./resources/JER_TLV/new_trips.txt', "r", "utf-8-sig")
         for line in fo:
             words = line.split(",")
 

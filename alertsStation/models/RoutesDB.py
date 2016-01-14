@@ -13,7 +13,7 @@ class Routes(ndb.Model):
 
     @staticmethod
     def readFromGtfsRoutes():
-        fo = codecs.open('./resources/new_routes.txt', "r", "utf-8-sig")
+        fo = codecs.open('./resources/JER_TLV/new_routes.txt', "r", "utf-8-sig")
         for line in fo:
             words = line.split(",")
 
