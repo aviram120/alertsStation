@@ -11,7 +11,7 @@ class Stops(ndb.Model):
 
     @staticmethod
     def readFromGtfsStops():
-        fo = codecs.open('./resources/JER_TLV/new_stops.txt', "r", "utf-8-sig")
+        fo = codecs.open('./resources/JER_TLV/stop_JER_TLV.txt', "r", "utf-8-sig")
         for line in fo:
             words = line.split(",")
 
