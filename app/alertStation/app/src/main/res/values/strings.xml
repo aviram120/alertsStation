@@ -7,7 +7,9 @@
     <string name="settings">הגדרות</string>
     <string name="app">הפעלת התראה</string>
     <string name="about">אודות</string>
+    <string name="title_activity_home_page">HomePage</string>
 
-
-
+    <string name="software_engineer">מהנדס תוכנה</string>
+    <string name="aviram">אבירם מזרחי</string>
+    <string name="yaakov">יעקב מושניק</string>
 </resources>

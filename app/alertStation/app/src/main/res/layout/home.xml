@@ -1,78 +1,110 @@
 <?xml version="1.0" encoding="utf-8" ?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#00B0F0"
     android:weightSum="1">
 
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Bus Bell"
-        android:id="@+id/textView"
-        android:layout_gravity="center_horizontal" />
-
-
     <LinearLayout
-        android:weightSum="8"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:weightSum="1">
 
         <ImageView
-            android:layout_weight="3"
-            android:layout_width="221dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/imageView3"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/iconbig1" />
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:src="@drawable/home_background" />
 
-        <Button
-            android:textStyle="bold"
-            android:background="@drawable/test_button"
-            android:textColor="#ff0800"
-            android:layout_width="120dp"
-            android:layout_height="36dp"
-            android:text="@string/app"
-            android:id="@+id/buttonTOapp"
-            android:layout_gravity="center_horizontal" />
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25" />
+            android:orientation="horizontal"
+            android:paddingTop="1dp"
+            >
 
-        <Button
-            android:textStyle="bold"
-            android:background="@drawable/test_button"
-            android:textColor="#ff0800"
-            android:layout_width="120dp"
-            android:layout_height="36dp"
-            android:text="@string/settings"
-            android:id="@+id/btSetting"
-            android:layout_gravity="center_horizontal" />
+            <ImageView
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:src="@drawable/alarm_icon" />
 
-        <TextView
-            android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/buttonTOapp"
+                android:text="@string/app"
+                android:textColor="#00B0F0"
+                android:textSize="25sp"
+
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/button00"/>
+
+
+        </LinearLayout >
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25" />
+            android:orientation="horizontal"
+            android:paddingTop="1dp"
+            >
 
-        <Button
-            android:textStyle="bold"
-            android:background="@drawable/test_button"
-            android:textColor="#ff0800"
-            android:layout_width="120dp"
-            android:layout_height="36dp"
-            android:text="@string/about"
-            android:id="@+id/btAbout"
-            android:layout_gravity="center_horizontal" />
+            <ImageView
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:src="@drawable/settings_icon" />
 
+            <Button
+                android:id="@+id/btSetting"
+                android:text="@string/settings"
+                android:textColor="#00B0F0"
+                android:textSize="25sp"
 
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/button00"/>
+
+        </LinearLayout >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="1dp"
+            >
+
+            <ImageView
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:src="@drawable/about_icon" />
+
+            <Button
+                android:id="@+id/btAbout"
+                android:text="@string/about"
+                android:textColor="#00B0F0"
+                android:textSize="25sp"
+
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/button00"/>
+
+        </LinearLayout >
     </LinearLayout>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar" />
 
 
 </LinearLayout>
