@@ -68,3 +68,4 @@ $RECYCLE.BIN/
 *.pyc
 .idea/*
 /edit_text
+\alertsStation\alertsStation\resources\stop_times_directory

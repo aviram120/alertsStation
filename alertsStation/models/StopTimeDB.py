@@ -18,7 +18,7 @@ class StopTime(ndb.Model):
 
     @staticmethod
     def readFromGtfsStopTime(file_number):
-        fo = codecs.open('./resources/JER_TLV/stop_times_directory/stop_times_JER_TLV'+str(file_number)+'.txt', "r", "utf-8-sig")
+        fo = codecs.open('./resources/JER/stop_times_directory/stop_times_JER'+str(file_number)+'.txt', "r", "utf-8-sig")
         for line in fo:
             words = line.split(",")
 
@@ -115,6 +115,8 @@ class StopTime(ndb.Model):
         reply_json=json.dumps(list,ensure_ascii=False)
 
         return reply_json
+
+
 
     @staticmethod
     def deleteAllStopTime():

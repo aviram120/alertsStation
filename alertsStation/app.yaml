@@ -9,8 +9,6 @@ handlers:
   static_files: favicon.ico
   upload: favicon\.ico
 
-- url: /stop_times_cron
-  script: stop_times_read.app
 
 - url: .*
   script: main.app

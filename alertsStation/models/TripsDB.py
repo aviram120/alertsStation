@@ -12,7 +12,7 @@ class Trips(ndb.Model):
 
     @staticmethod
     def readFromGtfsTrips():
-        fo = codecs.open('./resources/JER_TLV/trips_JER_TLV.txt', "r", "utf-8-sig")
+        fo = codecs.open('./resources/JER/trips_JER.txt', "r", "utf-8-sig")
         for line in fo:
             words = line.split(",")
 
@@ -49,19 +49,20 @@ class Trips(ndb.Model):
     def getAllStpsByRoutID(rout_id):
         list=[]
 
-        trip_idRow=Trips.query(Trips.route_id==rout_id)
+        trip_idRow = Trips.query(Trips.route_id == rout_id).get()
+        if trip_idRow is not None:
+            stopTime = StopTime.query(StopTime.trip_id == trip_idRow.trip_id)
 
-        stopTime=StopTime.query(StopTime.trip_id==trip_idRow.trip_id)
+            for stopTimesID in stopTime:
+                stops=Stops.query(Stops.stop_id==stopTimesID.stop_id).get()
+                if stops is not None:
+                    temp = {}
 
-        for stopTimesID in stopTime:
-            stops=Stops.query(Stops.stop_id==stopTimesID.stop_id)
-            temp = {}
-
-            temp['stop_sequence']=stopTimesID.stop_sequence
-            temp['stop_name']=stops.stop_name
-            temp['stop_lat']=stops.stop_lat
-            temp['stop_lon']=stops.stop_lon
-            list.append(temp)
+                    temp['stop_sequence']=stopTimesID.stop_sequence
+                    temp['stop_name']=stops.stop_name
+                    temp['stop_lat']=stops.stop_lat
+                    temp['stop_lon']=stops.stop_lon
+                    list.append(temp)
 
         reply_json=json.dumps(list,ensure_ascii=False)
         return reply_json

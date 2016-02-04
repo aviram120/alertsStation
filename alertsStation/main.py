@@ -12,11 +12,12 @@ from google.appengine.ext import ndb
 class MainHandler(webapp2.RequestHandler):
     def get(self):#agency?id=1
         id=self.request.get('id')
+        id_stop_time=self.request.get('id_stop_time')
         num=self.request.get('num')
 
         act=self.request.get('act')
         agency_id=self.request.get('agency_id')
-        city_name=self.request.get('city_name')
+        city_id=self.request.get('city_id')
         route_id=self.request.get('route_id')
 
 
@@ -44,8 +45,10 @@ class MainHandler(webapp2.RequestHandler):
                 if (agency_id!=""):
                     agency_id=agency_id.strip()
                     agency_id=int(agency_id)
-                    if (city_name!=""):
-                        routesIdName=Routes.getAllRoutesByAgencyCity(agency_id,city_name)
+                    if (city_id!=""):
+                        city_id=city_id.strip()
+                        city_id=int(city_id)
+                        routesIdName=Routes.getAllRoutesByAgencyCity(agency_id,city_id)
                         self.post(routesIdName)
 
             #/api?act=4&route_id=xxx
@@ -90,8 +93,11 @@ class MainHandler(webapp2.RequestHandler):
                 stops = Stops.getAllStops()
                 self.post(stops)
             if (id == 9):#read data from file to DB
-                stopTime = StopTime.readFromGtfsStopTime()
-                self.post("read from file stopTime")
+                if(id_stop_time != ""):
+                    id_stop_time=id_stop_time.strip()
+                    id_stop_time=int(id_stop_time)
+                    stopTime = StopTime.readFromGtfsStopTime(id_stop_time)
+                    self.post("read from file stopTime")
             if (id == 10):#get all DB
                 stopTime = StopTime.getAllStopTime()
                 self.post(stopTime)

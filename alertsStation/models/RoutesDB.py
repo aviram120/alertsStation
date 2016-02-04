@@ -10,10 +10,11 @@ class Routes(ndb.Model):
     route_desc = ndb.StringProperty()
     route_type = ndb.IntegerProperty()
     city_name = ndb.StringProperty()
+    city_id = ndb.IntegerProperty()
 
     @staticmethod
     def readFromGtfsRoutes():
-        fo = codecs.open('./resources/JER_TLV/routes_JER_TLV.txt', "r", "utf-8-sig")
+        fo = codecs.open('./resources/JER/routes_JER.txt', "r", "utf-8-sig")
         for line in fo:
             words = line.split(",")
 
@@ -37,8 +38,13 @@ class Routes(ndb.Model):
 
             city_name_loc = words[6]
 
+            city_id_loc = words[7]
+            city_id_loc = city_id_loc.strip()
+            city_id_loc = int(city_id_loc)
+
             addRow=Routes(route_id=route_id_loc, agency_id=agency_id_loc, route_short_name = route_short_name_loc,
-                         route_long_name = route_long_name_loc, route_desc = route_desc_loc, route_type = route_type_loc, city_name = city_name_loc)
+                         route_long_name = route_long_name_loc, route_desc = route_desc_loc, route_type = route_type_loc, city_name = city_name_loc,
+                         city_id = city_id_loc)
             addRow.put()
 
         fo.close()
@@ -56,6 +62,8 @@ class Routes(ndb.Model):
             tempRoutes['route_long_name']=res.route_long_name
             tempRoutes['route_desc']=res.route_desc
             tempRoutes['route_type']=res.route_type
+            tempRoutes['city_name']= res.city_name
+            tempRoutes['city_id']= res.city_id
             list.append(tempRoutes)
 
         reply_json=json.dumps(list,ensure_ascii=False)
@@ -65,10 +73,11 @@ class Routes(ndb.Model):
     @staticmethod
     def getAllCityByAgencyID(agency_id):
         list=[]
-        routes=Routes.query(Routes.agency_id == agency_id)
+        routes = Routes.query(Routes.agency_id == agency_id)
         for resRout in routes:
             tempRoutes = {}
-            tempRoutes['city_name']=resRout.route_id#TODO-- need to replace "route_id" to "city_name"
+            tempRoutes['city_name'] = resRout.city_name
+            tempRoutes['city_id'] = resRout.city_id
             if tempRoutes not in list:
                 list.append(tempRoutes)
 
@@ -76,9 +85,9 @@ class Routes(ndb.Model):
         return reply_json
 
     @staticmethod
-    def getAllRoutesByAgencyCity(agency_id,city_name):
+    def getAllRoutesByAgencyCity(agency_id,city_id):
         list=[]
-        routes=Routes.query(Routes.agency_id == agency_id,Routes.city_name==city_name)
+        routes=Routes.query(Routes.agency_id == agency_id,Routes.city_id==city_id)
         for resRout in routes:
             tempRoutes = {}
             tempRoutes['route_id']=resRout.route_id
@@ -87,13 +96,4 @@ class Routes(ndb.Model):
 
         reply_json=json.dumps(list,ensure_ascii=False)
         return reply_json
-
-
-
-
-
-
-
-
-
 
