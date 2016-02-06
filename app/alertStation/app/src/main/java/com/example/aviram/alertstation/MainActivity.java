@@ -42,7 +42,7 @@ import org.json.JSONObject;
 public class MainActivity extends Activity implements View.OnClickListener {
     private final String SERVER_URL="http://alertsstation-1172.appspot.com";
     private Spinner spinner_copmany,spinner_city,spinner_line,spinner_station;
-    private Button btSave;
+    private Button btSave,btCancel;
     private RequestQueue queue;
     private ArrayList<CompanyData> _companyList;
     private ArrayList<CitesData> _citesList;
@@ -58,6 +58,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private final long MIN_DISTANCE = 5;
     private Location _userLocation;
     private Activity activity;
+    private AlarmReceiver alarm;
 
 
     @Override
@@ -104,6 +105,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         btSave=(Button)findViewById(R.id.btSave);
         btSave.setOnClickListener(this);
+
+        btCancel=(Button)findViewById(R.id.btCancel);
+        btCancel.setOnClickListener(this);
+        btCancel.setEnabled(false);
 
         _companyList = new ArrayList<CompanyData>(); //save all the 'company' from server-as object
         _routesList = new ArrayList<RoutesData>(); //save all the 'routes' from server-as object
@@ -353,14 +358,17 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         if (v.getId() == R.id.btSave)//right text view
         {
-           /* Log.i("aviramLog","getStop_name:"+_stopsList.get((int) spinner_station.getSelectedItemId()).getStop_name());
-            Log.i("aviramLog", "getStop_lat:" + _stopsList.get((int) spinner_station.getSelectedItemId()).getStop_lat());
-            Log.i("aviramLog","getStop_lon:"+_stopsList.get((int) spinner_station.getSelectedItemId()).getStop_lon());
-            Log.i("aviramLog", "getStop_sequence:" + _stopsList.get((int) spinner_station.getSelectedItemId()).getStop_sequence());
-*/
-            AlarmReceiver alarm=new AlarmReceiver();
-            alarm.setAlarm(activity,locationManager,_stopsList.get((int) spinner_station.getSelectedItemId()));
+            Toast.makeText(activity.getApplicationContext(),"התראה מופעלת", Toast.LENGTH_SHORT).show();
 
+            alarm=new AlarmReceiver();
+            alarm.setAlarm(activity, locationManager, _stopsList.get((int) spinner_station.getSelectedItemId()), btSave, btCancel);
+
+
+        }
+        if (v.getId()==R.id.btCancel)
+        {
+            alarm.cancelAlarm();
+            Toast.makeText(activity.getApplicationContext(),"התראה מופסקת", Toast.LENGTH_SHORT).show();
 
         }
     }

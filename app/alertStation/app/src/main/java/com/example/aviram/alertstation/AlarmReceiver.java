@@ -12,15 +12,18 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.AudioAttributes;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 public class AlarmReceiver extends WakefulBroadcastReceiver implements LocationListener {
@@ -33,17 +36,22 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements LocationL
     private LocationListener mLocationListener;
     private final long SECOND = 1000;
     private final long MIN_DISTANCE = 5;
-    private Location _userLocation;
+    private Location _userLocation,stationLocation;
     private Activity activity;
     private Context context;
     private StopData stopStation;
+    private boolean runTask;
+    private Button btSave,btCancel;
 
     public AlarmReceiver() {
 
     }
-    public void setAlarm(Activity activity,LocationManager locationManagerFromMain,StopData stopStation) {
+    public void setAlarm(Activity activity,LocationManager locationManagerFromMain,StopData stopStation,Button btSave,Button btCancel) {
         //the function get activity-of the main, and stopStation that the user choose
         //the function start the trigger of checking the distance of the user from the station
+
+        this.btSave=btSave;
+        this.btCancel=btCancel;
 
         this.activity=activity;
         this.context=activity.getApplicationContext();
@@ -55,19 +63,30 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements LocationL
 
         // _userLocation = getLastKnownLocation();
         this.stopStation=stopStation;
+        stationLocation=new Location("");
+        stationLocation.setLatitude(stopStation.getStop_lat());
+        stationLocation.setLongitude(stopStation.getStop_lon());
 
         getLocationFromSystem();//get location from GPS and start the task
 
     }
-    public void cancelAlarm(Context context) {
+    public void cancelAlarm() {
+        Log.i("aviramLog", "cancelAlarm");
+
+        btSave.setEnabled(true);
+        btCancel.setEnabled(false);
+
+        runTask=false;
         alarmManager = ( AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, AlarmReceiver.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, alarmId, intent, 0);
         alarmManager.cancel(sender);
+
     }
     @Override
     public void onReceive(final Context context, Intent intent) {
         //the function start when the alert is ON
+
 
         //this will sound the alarm tone
         //this will sound the alarm once, if you wish to
@@ -78,6 +97,11 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements LocationL
         }
         Ringtone ringtone = RingtoneManager.getRingtone(context, alarmUri);
         ringtone.play();
+
+        /*Vibrator vibrator;
+        vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(1000);*/
+
 
         //this will send a notification message
         ComponentName comp = new ComponentName(context.getPackageName(),
@@ -95,10 +119,10 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements LocationL
         protected Integer doInBackground(Void... params) {
 
             int i=0;
-            while(true)//the button 'start alert' press
+            while(runTask)//the button 'start alert' press
             {
                 try {
-                    Thread.sleep(SECOND*2);//
+                    Thread.sleep(SECOND*4);//
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -112,11 +136,32 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements LocationL
             return i;
         }
         protected void onProgressUpdate(Integer... value) { //in run time
-            Log.i("aviramLog", "my Location "+ _userLocation.toString());//check location
+
+            if (_userLocation!=null)
+            {
+                Log.i("aviramLog", "my Location " + _userLocation.toString());//check location
+                Location userLocation=new Location("");
+                userLocation.setLongitude(_userLocation.getLongitude());
+                userLocation.setLatitude(_userLocation.getLatitude());
+
+                float distance=userLocation.distanceTo(stationLocation);
+                Log.i("aviramLog", "distance " +distance);//check location
+            }
+            else
+            {
+                Log.i("aviramLog", "_userLocation==null");
+            }
         }
         protected void onPostExecute(Integer result) {
-            Log.i("aviramLog", "onPostExecute i:" +result);
-            Context context=activity.getApplicationContext();
+            if (!runTask)//stop alert
+            {
+                return;
+            }
+            Log.i("aviramLog", "onPostExecute i:" + result);
+
+            btSave.setEnabled(true);
+            btCancel.setEnabled(false);
+
             alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
             Intent i = new Intent(context, AlarmReceiver.class);
             PendingIntent pi = PendingIntent.getBroadcast(context, alarmId, i, 0);
@@ -145,12 +190,16 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements LocationL
                     Log.d("aviramLog", "permissionGranted: " + permissionGranted);
                     if (permissionGranted) {
                         try{//get location -updates
-                            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, SECOND * 10, MIN_DISTANCE, mLocationListener);
-                            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, SECOND * 10, MIN_DISTANCE, mLocationListener);
+                            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, SECOND , MIN_DISTANCE, mLocationListener);
+                            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, SECOND , MIN_DISTANCE, mLocationListener);
                         } catch (SecurityException e) {   }
                     }
                 }
             });
+            btSave.setEnabled(false);
+            btCancel.setEnabled(true);
+
+            runTask=true;
             task = new Task();//make a new task
             task.execute();
         }

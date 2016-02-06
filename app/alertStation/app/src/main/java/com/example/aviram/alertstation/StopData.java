@@ -36,12 +36,12 @@ public class StopData {
         return stop_name;
     }
 
-    public String getStop_lat() {
-        return stop_lat;
+    public double getStop_lat() {
+        return Double.parseDouble(stop_lat);
     }
 
-    public String getStop_lon() {
-        return stop_lon;
+    public double getStop_lon() {
+        return Double.parseDouble(stop_lon);
     }
 
     public int getStop_sequence() {
