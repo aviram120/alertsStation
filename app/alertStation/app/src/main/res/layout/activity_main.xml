@@ -12,7 +12,8 @@
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="הפעל התראה"
+
+        android:text="@string/startAlert"
         android:id="@+id/btSave"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true" />
@@ -80,7 +81,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ביטול התראה"
+        android:text="@string/cancelAlert"
         android:id="@+id/btCancel"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true" />

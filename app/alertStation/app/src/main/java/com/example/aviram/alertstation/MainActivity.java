@@ -39,7 +39,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends Activity implements View.OnClickListener {
+public class MainActivity extends Activity implements View.OnClickListener/*,LocationListener*/ {
     private final String SERVER_URL="http://alertsstation-1172.appspot.com";
     private Spinner spinner_copmany,spinner_city,spinner_line,spinner_station;
     private Button btSave,btCancel;
@@ -50,13 +50,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private ArrayList<StopData> _stopsList;
 
     private ProgressDialog dialog;
-    private ProgressDialog dialogLocation;
     private LocationManager locationManager;
     private PermissionManager permissionManager;
-    private LocationListener mLocationListener;
-    private final long SECOND = 1000;
-    private final long MIN_DISTANCE = 5;
-    private Location _userLocation;
     private Activity activity;
     private AlarmReceiver alarm;
 
@@ -68,11 +63,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_main);
 
         activity=this;//save the activity
+
+        //init location
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-       /* //init location
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        mLocationListener = this;
-*/
+        //mLocationListener = this;
+
         initialization();
 
         getCompanyFromServer();
@@ -85,11 +80,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         spinner_id.setAdapter(dataAdapter);
     }
     private void initialization() {
-
-       /* _userLocation = getLastKnownLocation();
-
-        dialogLocation = new ProgressDialog(this);
-        dialogLocation.setMessage("Getting Location...");*/
 
         dialog = new ProgressDialog(this);
         dialog.setMessage("Loading Date...");
@@ -105,6 +95,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         btSave=(Button)findViewById(R.id.btSave);
         btSave.setOnClickListener(this);
+        btSave.setEnabled(false);
 
         btCancel=(Button)findViewById(R.id.btCancel);
         btCancel.setOnClickListener(this);
@@ -210,6 +201,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                         response = response.replaceAll("\\r\\n", "");
                         jsonEventList = new JSONArray(response);
 
+
                     } catch (JSONException e) {
                         return;
                     }
@@ -219,6 +211,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     else
                     {
                         try{
+                            _citesList.clear();
                             List <String> list_cites = new ArrayList<String>();//list for the spinner
                             CitesData tempCitesData;
                             for(int i = 0; i < jsonEventList.length(); i++) {
@@ -247,11 +240,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void getRoutesFromServer() {
         //the function get all Routes from server by agency_id and city_id
 
+
         dialog.show();
         String url=SERVER_URL+"/api?act=3&agency_id="+ _companyList.get((int) spinner_copmany.getSelectedItemId()).getCompany_id()+
                 "&city_id="+_citesList.get((int) spinner_city.getSelectedItemId()).getCity_id();
         queue = Volley.newRequestQueue(this);
-
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>(){
 
@@ -270,6 +263,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                         else
                         {
                             try{
+                                _routesList.clear();
                                 List < String > list_routes = new ArrayList<String>();//list for the spinner
                                 RoutesData tempRoutesData;
                                 for(int i = 0; i < jsonEventList.length(); i++) {
@@ -325,6 +319,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                         else
                         {
                             try{
+                                _stopsList.clear();
                                 List < String > list_stops = new ArrayList<String>();//list for the spinner
                                 StopData tempStopData;
                                 for(int i = 0; i < jsonEventList.length(); i++) {
@@ -336,11 +331,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
                                     list_stops.add(jsonCompany.getString("stop_name"));
                                 }
                                 addItemsOnSpinner(spinner_station, list_stops);//add to spinner
+
+                                btSave.setEnabled(true);
                             }catch (JSONException e){}
                         }
-
                     }
-
                 },new Response.ErrorListener(){
             @Override
             public void onErrorResponse(VolleyError error){
@@ -358,20 +353,90 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         if (v.getId() == R.id.btSave)//right text view
         {
-            Toast.makeText(activity.getApplicationContext(),"התראה מופעלת", Toast.LENGTH_SHORT).show();
-
-            alarm=new AlarmReceiver();
-            alarm.setAlarm(activity, locationManager, _stopsList.get((int) spinner_station.getSelectedItemId()), btSave, btCancel);
-
-
+            getLocationFromSystem();//check if GPS in on- and start service
         }
         if (v.getId()==R.id.btCancel)
         {
-            alarm.cancelAlarm();
-            Toast.makeText(activity.getApplicationContext(),"התראה מופסקת", Toast.LENGTH_SHORT).show();
+            btSave.setEnabled(true);
+            btCancel.setEnabled(false);
 
+            stopService(new Intent(getBaseContext(), MyService.class));
+
+            /*
+            Toast.makeText(activity.getApplicationContext(),this.getString(R.string.alertIsOff), Toast.LENGTH_SHORT).show();
+            */
         }
     }
 
+    // =============================================================
+    // GPS
+    // =============================================================
+    private void getLocationFromSystem() {
+        // the function get the location from GPS
+
+        boolean isGPSAvailable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean isWIFIAvailable = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        Log.i("aviramLog", "in my location gps" + isGPSAvailable);
+        Log.i("aviramLog", "in my location wifi" + isWIFIAvailable);
+        if (isGPSAvailable) {
+            //get run time permission
+            permissionManager = new PermissionManager(activity, new PermissionManager.OnPermissionListener() {
+                public void OnPermissionChanged(boolean permissionGranted) {
+                    Log.d("aviramLog", "permissionGranted: " + permissionGranted);
+                    if (permissionGranted) {
+
+                        StopData tempStop=null;
+                        tempStop=_stopsList.get((int) spinner_station.getSelectedItemId());
+
+
+                        Intent service=new Intent(getBaseContext(), MyService.class);
+                        JSONObject obj = (tempStop.convertToJSON(tempStop));
+                        service.putExtra("object", obj.toString());
+                        service.putExtra("distanceFrom",500);
+
+                        /*
+                        Toast.makeText(activity.getApplicationContext(),this.getString(R.string.alertIsOn), Toast.LENGTH_SHORT).show();
+                        */
+                        btSave.setEnabled(false);
+                        btCancel.setEnabled(true);
+
+                        startService(service);
+                    }
+                }
+            });
+        }
+        else//if the location not available
+        {
+            showSettingsAlert();
+        }
+    }
+    private void showSettingsAlert() {
+        //the function show a alert dialog-of setting
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+
+        // Setting Dialog Title
+        alertDialog.setTitle("GPS is settings");
+
+        // Setting Dialog Message
+        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
+
+        // On pressing Settings button
+        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                activity.startActivity(intent);
+            }
+        });
+
+        // on pressing cancel button
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        // Showing Alert Message
+        alertDialog.show();
+    }
 
 }//end

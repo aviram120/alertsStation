@@ -30,8 +30,19 @@ public class StopData {
 
         }
     }
-
-
+    public JSONObject convertToJSON(StopData stopSt)
+    {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("stop_name",stopSt.getStop_name());
+            obj.put("stop_lat",stopSt.getStop_lat());
+            obj.put("stop_lon",stopSt.getStop_lon());
+            obj.put("stop_sequence",stopSt.getStop_sequence());
+        }
+        catch (JSONException e)
+        {        }
+        return  obj;
+    }
     public String getStop_name() {
         return stop_name;
     }
