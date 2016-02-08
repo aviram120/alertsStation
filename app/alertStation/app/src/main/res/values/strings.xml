@@ -5,6 +5,8 @@
     <string name="action_settings">Settings</string>
 
     <string name="settings">הגדרות</string>
+    <string name="settingsDistanceFromStation">מרחק מתחנה:</string>
+    <string name="btSave">שמירה</string>
 
     <string name="title_activity_home_page">HomePage</string>
 

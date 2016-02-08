@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -54,6 +55,10 @@ public class MainActivity extends Activity implements View.OnClickListener/*,Loc
     private PermissionManager permissionManager;
     private Activity activity;
     private AlarmReceiver alarm;
+
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
+    private int distanceFrom;
 
 
     @Override
@@ -105,6 +110,24 @@ public class MainActivity extends Activity implements View.OnClickListener/*,Loc
         _routesList = new ArrayList<RoutesData>(); //save all the 'routes' from server-as object
         _citesList = new ArrayList<CitesData>();
         _stopsList = new ArrayList<StopData>();
+
+        getDataFromSP();
+
+    }
+    private void getDataFromSP()
+    {
+        sharedPref = getSharedPreferences("prefDistanceFromStation", MODE_PRIVATE);
+        editor = sharedPref.edit();
+
+        if (sharedPref.getInt("DistanceFrom",-1)==-1)//first time the app open
+        {
+            editor.putInt("DistanceFrom", 200);
+            distanceFrom=200;
+            editor.apply();
+            Log.i("aviramLog","first level");
+        }
+
+        distanceFrom=sharedPref.getInt("DistanceFrom",200);
     }
     public class OnItemSelectedListener implements AdapterView.OnItemSelectedListener {
         public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -392,7 +415,7 @@ public class MainActivity extends Activity implements View.OnClickListener/*,Loc
                         Intent service=new Intent(getBaseContext(), MyService.class);
                         JSONObject obj = (tempStop.convertToJSON(tempStop));
                         service.putExtra("object", obj.toString());
-                        service.putExtra("distanceFrom",500);
+                        service.putExtra("distanceFrom",distanceFrom);
 
                         /*
                         Toast.makeText(activity.getApplicationContext(),this.getString(R.string.alertIsOn), Toast.LENGTH_SHORT).show();

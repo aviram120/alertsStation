@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00B0F0">
+    android:background="#00B0F0"
+    android:weightSum="1">
 
     <TextView
         android:layout_width="wrap_content"
@@ -11,4 +12,28 @@
         android:text="@string/settings"
         android:id="@+id/textView2"
         android:layout_gravity="center_horizontal" />
+
+    <EditText
+        android:layout_width="173dp"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/editTextDes"
+        android:layout_gravity="right" />
+
+    <TextView
+        android:layout_width="211dp"
+        android:layout_height="58dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/settingsDistanceFromStation"
+        android:id="@+id/textViewDistance" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btSave"
+        android:id="@+id/btSaveDes"
+        android:layout_gravity="center_horizontal" />
+
+
 </LinearLayout>

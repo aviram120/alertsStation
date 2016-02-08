@@ -74,21 +74,6 @@ public class MyService extends Service implements LocationListener{
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, SECOND, MIN_DISTANCE, mLocationListener);
         } catch (SecurityException e) {   }
 
-JSONObject stopObj;
-        String obj=intent.getExtras().getString("object");
-        Log.i("aviramLog", "object " + obj);
-        try
-        {
-            stopObj = new JSONObject(obj);
-            stopData=new StopData(stopObj,-1);//convert to object
-        }
-        catch (JSONException e)
-        {
-
-        }
-
-        distanceFromStation=intent.getExtras().getInt("distanceFrom");
-        Log.i("aviramLog", "distanceFrom " + distanceFromStation);
         return START_NOT_STICKY;
     }
     public void onDestroy() {
