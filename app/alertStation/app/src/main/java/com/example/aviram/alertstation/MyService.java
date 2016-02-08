@@ -74,8 +74,22 @@ public class MyService extends Service implements LocationListener{
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, SECOND, MIN_DISTANCE, mLocationListener);
         } catch (SecurityException e) {   }
 
+JSONObject stopObj;
+        String obj=intent.getExtras().getString("object");
+        Log.i("aviramLog", "object " + obj);
+        try
+        {
+            stopObj = new JSONObject(obj);
+            stopData=new StopData(stopObj,-1);//convert to object
+        }
+        catch (JSONException e)
+        {
 
-        return START_STICKY;
+        }
+
+        distanceFromStation=intent.getExtras().getInt("distanceFrom");
+        Log.i("aviramLog", "distanceFrom " + distanceFromStation);
+        return START_NOT_STICKY;
     }
     public void onDestroy() {
         //stop the service
@@ -115,9 +129,9 @@ public class MyService extends Service implements LocationListener{
     private void checkIfArriveToStation(float distance,float Accuracy) {
         //the function check if the user arrive to the station
 
-        if (distanceFromStation>=distance+Accuracy)
+        if (distanceFromStation>=distance+Accuracy/2)
         {
-            //notify(getApplicationContext(),"Bus Bell-Alarm",this.getString(R.string.NotificatioText));
+            notify(getApplicationContext(),"Bus Bell-Alarm",this.getString(R.string.NotificatioText)+"\n"+"תחנת: "+stopData.getStop_name());
             //startAlarm();
             stopSelf();//stop the Service and sent alert
         }
@@ -136,11 +150,11 @@ public class MyService extends Service implements LocationListener{
         stationLocation.setLongitude(stopData.getStop_lon());
 
         float distance=userLocation.distanceTo(stationLocation);
-        Toast.makeText(this, "distance"+distance, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "distance"+distance, Toast.LENGTH_SHORT).show();
         Log.i("aviramLog", "distance " + distance);
         Log.i("aviramLog", "location" + userLocation);
 
-        //checkIfArriveToStation(distance,userLocation.getAccuracy());
+        checkIfArriveToStation(distance,userLocation.getAccuracy());
 
     }
     public void onStatusChanged(String provider, int status, Bundle extras) {

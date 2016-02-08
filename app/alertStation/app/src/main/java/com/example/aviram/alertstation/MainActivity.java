@@ -353,6 +353,7 @@ public class MainActivity extends Activity implements View.OnClickListener/*,Loc
 
         if (v.getId() == R.id.btSave)//right text view
         {
+            dialog.dismiss();
             getLocationFromSystem();//check if GPS in on- and start service
         }
         if (v.getId()==R.id.btCancel)
@@ -387,7 +388,6 @@ public class MainActivity extends Activity implements View.OnClickListener/*,Loc
 
                         StopData tempStop=null;
                         tempStop=_stopsList.get((int) spinner_station.getSelectedItemId());
-
 
                         Intent service=new Intent(getBaseContext(), MyService.class);
                         JSONObject obj = (tempStop.convertToJSON(tempStop));
