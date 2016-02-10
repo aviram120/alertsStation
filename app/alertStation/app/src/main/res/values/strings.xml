@@ -5,11 +5,21 @@
     <string name="action_settings">Settings</string>
 
     <string name="settings">הגדרות</string>
-    <string name="app">הפעלת התראה</string>
-    <string name="about">אודות</string>
+    <string name="settingsDistanceFromStation">מרחק מתחנה:</string>
+    <string name="btSave">שמירה</string>
+
     <string name="title_activity_home_page">HomePage</string>
 
+    <string name="about">אודות</string>
     <string name="software_engineer">מהנדס תוכנה</string>
     <string name="aviram">אבירם מזרחי</string>
     <string name="yaakov">יעקב מושניק</string>
+
+    <string name="app">הפעלת התראה</string>
+    <string name="startAlert">הפעל התראה</string>
+    <string name="cancelAlert">בטל התראה</string>
+    <string name="alertIsOn">התראה מופעלת</string>
+    <string name="alertIsOff">התראה מופסקת</string>
+    <string name="NotificatioText">הגעת ליעד!</string>
+
 </resources>
