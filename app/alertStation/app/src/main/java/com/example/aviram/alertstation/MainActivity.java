@@ -40,7 +40,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends Activity implements View.OnClickListener/*,LocationListener*/ {
+public class MainActivity extends Activity implements View.OnClickListener{
     private final String SERVER_URL="http://alertsstation-1172.appspot.com";
     private Spinner spinner_copmany,spinner_city,spinner_line,spinner_station;
     private Button btSave,btCancel;
@@ -59,7 +59,8 @@ public class MainActivity extends Activity implements View.OnClickListener/*,Loc
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
     private int distanceFrom;
-
+    private int checkBoxNoti,checkBoxchAlertClock;
+    private boolean exitFromApp;//if user exit from app when the alert is on - and enter to the app again
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +76,22 @@ public class MainActivity extends Activity implements View.OnClickListener/*,Loc
 
         initialization();
 
-        getCompanyFromServer();
+        if (sharedPref.getInt("alertStatus",0)==1)//check if alert is on
+        {
+            btSave.setEnabled(false);
+            btCancel.setEnabled(true);
+
+            spinner_copmany.setEnabled(false);
+            spinner_station.setEnabled(false);
+            spinner_city.setEnabled(false);
+            spinner_line.setEnabled(false);
+
+            exitFromApp=true;
+        }
+        else//alert is off
+        {
+            getCompanyFromServer();
+        }
 
     }
     public void addItemsOnSpinner(Spinner spinner_id,List<String> list) {
@@ -111,13 +127,15 @@ public class MainActivity extends Activity implements View.OnClickListener/*,Loc
         _citesList = new ArrayList<CitesData>();
         _stopsList = new ArrayList<StopData>();
 
+        sharedPref = getSharedPreferences("prefDistanceFromStation", MODE_PRIVATE);
+        editor = sharedPref.edit();
+
+        exitFromApp=false;
+
         getDataFromSP();
 
     }
-    private void getDataFromSP()
-    {
-        sharedPref = getSharedPreferences("prefDistanceFromStation", MODE_PRIVATE);
-        editor = sharedPref.edit();
+    private void getDataFromSP() {
 
         if (sharedPref.getInt("DistanceFrom",-1)==-1)//first time the app open
         {
@@ -128,6 +146,13 @@ public class MainActivity extends Activity implements View.OnClickListener/*,Loc
         }
 
         distanceFrom=sharedPref.getInt("DistanceFrom",200);
+
+        //get alert setting
+        checkBoxNoti=sharedPref.getInt("CheckBoxNoti",1);
+        checkBoxchAlertClock=sharedPref.getInt("CheckBoxchAlertClock",0);
+        Log.i("aviramLog", "checkBoxchAlertClock start " + checkBoxchAlertClock);
+        Log.i("aviramLog", "checkBoxNoti start" + checkBoxNoti);
+
     }
     public class OnItemSelectedListener implements AdapterView.OnItemSelectedListener {
         public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -135,12 +160,10 @@ public class MainActivity extends Activity implements View.OnClickListener/*,Loc
             Spinner spinner = (Spinner) parent;
             if(spinner.getId() == R.id.spinner_copmany)
             {
-                //Log.i("aviramLog", "spinner_comapny ");
                 getCitesFromServer();
             }
             if(spinner.getId() == R.id.spinner_city)
             {
-
                 getRoutesFromServer();
             }
             if(spinner.getId() == R.id.spinner_line)
@@ -371,7 +394,6 @@ public class MainActivity extends Activity implements View.OnClickListener/*,Loc
         queue.add(request);
 
     }
-
     public void onClick(View v) {
 
         if (v.getId() == R.id.btSave)//right text view
@@ -379,8 +401,7 @@ public class MainActivity extends Activity implements View.OnClickListener/*,Loc
             dialog.dismiss();
             getLocationFromSystem();//check if GPS in on- and start service
         }
-        if (v.getId()==R.id.btCancel)
-        {
+        if (v.getId()==R.id.btCancel) {
             btSave.setEnabled(true);
             btCancel.setEnabled(false);
 
@@ -389,6 +410,16 @@ public class MainActivity extends Activity implements View.OnClickListener/*,Loc
             /*
             Toast.makeText(activity.getApplicationContext(),this.getString(R.string.alertIsOff), Toast.LENGTH_SHORT).show();
             */
+
+            if (exitFromApp)
+            {
+                exitFromApp=false;
+                spinner_copmany.setEnabled(true);
+                spinner_station.setEnabled(true);
+                spinner_city.setEnabled(true);
+                spinner_line.setEnabled(true);
+                getCompanyFromServer();
+            }
         }
     }
 
@@ -416,6 +447,11 @@ public class MainActivity extends Activity implements View.OnClickListener/*,Loc
                         JSONObject obj = (tempStop.convertToJSON(tempStop));
                         service.putExtra("object", obj.toString());
                         service.putExtra("distanceFrom",distanceFrom);
+                        service.putExtra("checkBoxNoti",checkBoxNoti);
+                        service.putExtra("checkBoxchAlertClock",checkBoxchAlertClock);
+
+                        editor.putInt("alertStatus",1);
+                        editor.apply();
 
                         /*
                         Toast.makeText(activity.getApplicationContext(),this.getString(R.string.alertIsOn), Toast.LENGTH_SHORT).show();

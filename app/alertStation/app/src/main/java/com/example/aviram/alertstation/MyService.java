@@ -8,6 +8,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -26,7 +27,6 @@ import org.json.JSONObject;
 
 public class MyService extends Service implements LocationListener{
 
-
     private Intent intent;
     private LocationManager locationManager;
     private LocationListener mLocationListener;
@@ -34,6 +34,10 @@ public class MyService extends Service implements LocationListener{
     private final long MIN_DISTANCE = 5;
     private StopData stopData;
     private float distanceFromStation;
+    private int checkBoxNoti,checkBoxchAlertClock;
+
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
 
     public IBinder onBind(Intent arg0) {
         return null;
@@ -53,16 +57,26 @@ public class MyService extends Service implements LocationListener{
         {
 
         }
-
         distanceFromStation=intent.getExtras().getInt("distanceFrom");
         Log.i("aviramLog", "distanceFrom " + distanceFromStation);
+
+        checkBoxchAlertClock=intent.getExtras().getInt("checkBoxchAlertClock");
+        checkBoxNoti=intent.getExtras().getInt("checkBoxNoti");
+
+        Log.i("aviramLog", "checkBoxchAlertClock " + checkBoxchAlertClock);
+        Log.i("aviramLog", "checkBoxNoti " + checkBoxNoti);
     }
     public int onStartCommand(Intent intent, int flags, int startId) {
         //start the Service
-        // Let it continue running until it is stopped.
 
+        // Let it continue running until it is stopped.
+        Log.i("aviramLog", "flags " + flags);
+        Log.i("aviramLog", "startId " + startId);
         Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
         this.intent = intent;
+
+        sharedPref = getSharedPreferences("prefDistanceFromStation", MODE_PRIVATE);
+        editor = sharedPref.edit();
 
         getBundleInformation();//get the data from getExtras-intent
 
@@ -74,7 +88,8 @@ public class MyService extends Service implements LocationListener{
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, SECOND, MIN_DISTANCE, mLocationListener);
         } catch (SecurityException e) {   }
 
-        return START_NOT_STICKY;
+
+        return START_REDELIVER_INTENT;
     }
     public void onDestroy() {
         //stop the service
@@ -83,9 +98,10 @@ public class MyService extends Service implements LocationListener{
         try
         {
             locationManager.removeUpdates(mLocationListener);
-        }
-        catch (SecurityException e) {   }
+        } catch (SecurityException e) {   }
 
+        editor.putInt("alertStatus",0);
+        editor.apply();
         Toast.makeText(this, "Service Destroyed", Toast.LENGTH_SHORT).show();
     }
     private static void notify(Context context, String title, String text) {
@@ -104,6 +120,7 @@ public class MyService extends Service implements LocationListener{
         nm.notify(notificationID, builder.build());
     }
     private void startAlarm() {
+
         Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         if (alarmUri == null) {
             alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -114,10 +131,12 @@ public class MyService extends Service implements LocationListener{
     private void checkIfArriveToStation(float distance,float Accuracy) {
         //the function check if the user arrive to the station
 
-        if (distanceFromStation>=distance+Accuracy/2)
-        {
-            notify(getApplicationContext(),"Bus Bell-Alarm",this.getString(R.string.NotificatioText)+"\n"+"תחנת: "+stopData.getStop_name());
-            //startAlarm();
+        if (distanceFromStation >= distance + Accuracy / 2) {
+            if (checkBoxNoti==1)
+                notify(getApplicationContext(), "Bus Bell-Alarm", this.getString(R.string.NotificatioText) + "\n" + "תחנת: " + stopData.getStop_name());
+            if (checkBoxchAlertClock==1)
+                startAlarm();
+
             stopSelf();//stop the Service and sent alert
         }
     }
@@ -135,7 +154,7 @@ public class MyService extends Service implements LocationListener{
         stationLocation.setLongitude(stopData.getStop_lon());
 
         float distance=userLocation.distanceTo(stationLocation);
-        //Toast.makeText(this, "distance"+distance, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "distance"+distance, Toast.LENGTH_SHORT).show();
         Log.i("aviramLog", "distance " + distance);
         Log.i("aviramLog", "location" + userLocation);
 
