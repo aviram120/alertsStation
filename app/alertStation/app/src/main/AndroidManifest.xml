@@ -27,23 +27,13 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".Setting" />
         <activity android:name=".About" />
-        <activity
-            android:name=".HomePage"
-            android:label="@string/title_activity_home_page"></activity>
 
 
         <service android:name=".MyService"
-            android:enabled="true"/>
-
-        <service
-            android:name=".AlarmService"
-            android:enabled="true" />
-
-        <receiver
-            android:name=".AlarmReceiver"
             android:enabled="true"
             android:exported="true"
             />
+
     </application>
 
 </manifest>
