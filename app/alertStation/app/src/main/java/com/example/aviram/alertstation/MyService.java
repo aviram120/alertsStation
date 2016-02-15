@@ -46,7 +46,7 @@ public class MyService extends Service implements LocationListener{
         //the function get data from Bundle
 
         JSONObject stopObj;
-        String obj=intent.getExtras().getString("object");
+        String obj=intent.getExtras().getString("object");//station info
         Log.i("aviramLog", "object " + obj);
         try
         {
@@ -54,14 +54,13 @@ public class MyService extends Service implements LocationListener{
             stopData=new StopData(stopObj,-1);//convert to object
         }
         catch (JSONException e)
-        {
+        {        }
 
-        }
         distanceFromStation=intent.getExtras().getInt("distanceFrom");
         Log.i("aviramLog", "distanceFrom " + distanceFromStation);
 
-        checkBoxchAlertClock=intent.getExtras().getInt("checkBoxchAlertClock");
-        checkBoxNoti=intent.getExtras().getInt("checkBoxNoti");
+        checkBoxchAlertClock=intent.getExtras().getInt("checkBoxchAlertClock");//alert clock
+        checkBoxNoti=intent.getExtras().getInt("checkBoxNoti");//Notification
 
         Log.i("aviramLog", "checkBoxchAlertClock " + checkBoxchAlertClock);
         Log.i("aviramLog", "checkBoxNoti " + checkBoxNoti);
@@ -105,6 +104,7 @@ public class MyService extends Service implements LocationListener{
         Toast.makeText(this, "Service Destroyed", Toast.LENGTH_SHORT).show();
     }
     private static void notify(Context context, String title, String text) {
+        //set Notification
 
         NotificationManager nm = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -120,6 +120,7 @@ public class MyService extends Service implements LocationListener{
         nm.notify(notificationID, builder.build());
     }
     private void startAlarm() {
+        //set the alarm
 
         Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         if (alarmUri == null) {
@@ -133,11 +134,12 @@ public class MyService extends Service implements LocationListener{
 
         if (distanceFromStation >= distance + Accuracy / 2) {
             if (checkBoxNoti==1)
-                notify(getApplicationContext(), "Bus Bell-Alarm", this.getString(R.string.NotificatioText) + "\n" + "תחנת: " + stopData.getStop_name());
+                notify(getApplicationContext(), "Bus Bell-Alarm", this.getString(R.string.NotificatioText) + "\n"
+                                                                + this.getString(R.string.station)+" "+ stopData.getStop_name());
             if (checkBoxchAlertClock==1)
                 startAlarm();
 
-            stopSelf();//stop the Service and sent alert
+            stopSelf();//stop the Service
         }
     }
 
@@ -158,7 +160,7 @@ public class MyService extends Service implements LocationListener{
         Log.i("aviramLog", "distance " + distance);
         Log.i("aviramLog", "location" + userLocation);
 
-        checkIfArriveToStation(distance,userLocation.getAccuracy());
+        checkIfArriveToStation(distance,userLocation.getAccuracy());//check the distance from user to station
 
     }
     public void onStatusChanged(String provider, int status, Bundle extras) {

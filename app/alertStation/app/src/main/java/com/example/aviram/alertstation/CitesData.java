@@ -9,8 +9,7 @@ public class CitesData
     private String city_name;
     private int indexInList;
 
-    public CitesData(JSONObject jsonObject,int indexInList)
-    {
+    public CitesData(JSONObject jsonObject,int indexInList) {
         try
         {
             int city_id = jsonObject.getInt("city_id");
@@ -25,7 +24,6 @@ public class CitesData
 
         }
     }
-
     public int getCity_id() {
         return city_id;
     }

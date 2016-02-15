@@ -10,8 +10,7 @@ public class StopData {
     private int stop_sequence;
     private int indexInList;
 
-    public StopData(JSONObject jsonObject,int indexInList)
-    {
+    public StopData(JSONObject jsonObject,int indexInList) {
         try
         {
             int stop_sequence = jsonObject.getInt("stop_sequence");
@@ -30,8 +29,7 @@ public class StopData {
 
         }
     }
-    public JSONObject convertToJSON(StopData stopSt)
-    {
+    public JSONObject convertToJSON(StopData stopSt) {
         JSONObject obj = new JSONObject();
         try {
             obj.put("stop_name",stopSt.getStop_name());
@@ -46,19 +44,15 @@ public class StopData {
     public String getStop_name() {
         return stop_name;
     }
-
     public double getStop_lat() {
         return Double.parseDouble(stop_lat);
     }
-
     public double getStop_lon() {
         return Double.parseDouble(stop_lon);
     }
-
     public int getStop_sequence() {
         return stop_sequence;
     }
-
     public int getIndexInList() {
         return indexInList;
     }

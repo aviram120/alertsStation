@@ -15,8 +15,7 @@ public class CompanyData {
 
 
 
-    public CompanyData(JSONObject jsonObject,int indexInList)
-    {
+    public CompanyData(JSONObject jsonObject,int indexInList) {
         try
         {
             int company_id = jsonObject.getInt("agencyId");
@@ -34,11 +33,9 @@ public class CompanyData {
         }
 
     }
-
     public int getCompany_id() {
         return company_id;
     }
-
     public String getCompany_name() {
         return company_name;
     }

@@ -24,5 +24,6 @@
     <string name="alertIsOn">התראה מופעלת</string>
     <string name="alertIsOff">התראה מופסקת</string>
     <string name="NotificatioText">הגעת ליעד!</string>
+    <string name="station">תחנת:</string>
 
 </resources>

@@ -54,7 +54,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private LocationManager locationManager;
     private PermissionManager permissionManager;
     private Activity activity;
-    private AlarmReceiver alarm;
 
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
@@ -76,7 +75,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         initialization();
 
-        if (sharedPref.getInt("alertStatus",0)==1)//check if alert is on
+        if (sharedPref.getInt("alertStatus",0)==1)//check if alert already on
         {
             btSave.setEnabled(false);
             btCancel.setEnabled(true);
@@ -95,6 +94,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
     }
     public void addItemsOnSpinner(Spinner spinner_id,List<String> list) {
+        //the function put list to spinner
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, list);//TODO change the design
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -124,18 +124,20 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         _companyList = new ArrayList<CompanyData>(); //save all the 'company' from server-as object
         _routesList = new ArrayList<RoutesData>(); //save all the 'routes' from server-as object
-        _citesList = new ArrayList<CitesData>();
-        _stopsList = new ArrayList<StopData>();
+        _citesList = new ArrayList<CitesData>();//save all the 'Cites' from server-as object
+        _stopsList = new ArrayList<StopData>();//save all the 'station' from server-as object
 
+        //set Shared Preferences-for save the setting
         sharedPref = getSharedPreferences("prefDistanceFromStation", MODE_PRIVATE);
         editor = sharedPref.edit();
 
         exitFromApp=false;
 
-        getDataFromSP();
+        getDataFromSP();//get data from Shared Preferences
 
     }
     private void getDataFromSP() {
+        //the function get the data from Shared Preferences
 
         if (sharedPref.getInt("DistanceFrom",-1)==-1)//first time the app open
         {
@@ -148,11 +150,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
         distanceFrom=sharedPref.getInt("DistanceFrom",200);
 
         //get alert setting
-        checkBoxNoti=sharedPref.getInt("CheckBoxNoti",1);
-        checkBoxchAlertClock=sharedPref.getInt("CheckBoxchAlertClock",0);
-        Log.i("aviramLog", "checkBoxchAlertClock start " + checkBoxchAlertClock);
-        Log.i("aviramLog", "checkBoxNoti start" + checkBoxNoti);
-
+        checkBoxNoti=sharedPref.getInt("CheckBoxNoti", 1);
+        checkBoxchAlertClock=sharedPref.getInt("CheckBoxchAlertClock", 0);
     }
     public class OnItemSelectedListener implements AdapterView.OnItemSelectedListener {
         public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -174,12 +173,41 @@ public class MainActivity extends Activity implements View.OnClickListener{
         }
         public void onNothingSelected(AdapterView parent) {}
     }
+    public void onClick(View v) {
+
+        if (v.getId() == R.id.btSave)//start alert
+        {
+            dialog.dismiss();
+            getLocationFromSystem();//check if GPS in on- and start service
+        }
+        if (v.getId()==R.id.btCancel) {
+            btSave.setEnabled(true);
+            btCancel.setEnabled(false);
+
+            stopService(new Intent(getBaseContext(), MyService.class));
+
+            /*
+            Toast.makeText(activity.getApplicationContext(),this.getString(R.string.alertIsOff), Toast.LENGTH_SHORT).show();
+            */
+
+            if (exitFromApp)//if the user exit from the app
+            {
+                exitFromApp=false;
+                spinner_copmany.setEnabled(true);
+                spinner_station.setEnabled(true);
+                spinner_city.setEnabled(true);
+                spinner_line.setEnabled(true);
+                getCompanyFromServer();
+            }
+        }
+    }
+
 
     // =============================================================
     // API Request
     // =============================================================
     private void getCompanyFromServer() {
-        //the function get from server the company(mane , id)
+        //the function get from server the company(name , id)
 
         dialog.show();
         String url=SERVER_URL+"/api?act=1";
@@ -286,7 +314,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private void getRoutesFromServer() {
         //the function get all Routes from server by agency_id and city_id
 
-
         dialog.show();
         String url=SERVER_URL+"/api?act=3&agency_id="+ _companyList.get((int) spinner_copmany.getSelectedItemId()).getCompany_id()+
                 "&city_id="+_citesList.get((int) spinner_city.getSelectedItemId()).getCity_id();
@@ -319,7 +346,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
                                     _routesList.add(tempRoutesData);
 
                                     list_routes.add(jsonCompany.getString("route_short_name"));
-                                    //Log.i("aviramLog", "route id: " + jsonCompany.getString("route_id"));
                                 }
                                 addItemsOnSpinner(spinner_line, list_routes);//add to spinner
                             }catch (JSONException e){}
@@ -394,40 +420,13 @@ public class MainActivity extends Activity implements View.OnClickListener{
         queue.add(request);
 
     }
-    public void onClick(View v) {
 
-        if (v.getId() == R.id.btSave)//right text view
-        {
-            dialog.dismiss();
-            getLocationFromSystem();//check if GPS in on- and start service
-        }
-        if (v.getId()==R.id.btCancel) {
-            btSave.setEnabled(true);
-            btCancel.setEnabled(false);
-
-            stopService(new Intent(getBaseContext(), MyService.class));
-
-            /*
-            Toast.makeText(activity.getApplicationContext(),this.getString(R.string.alertIsOff), Toast.LENGTH_SHORT).show();
-            */
-
-            if (exitFromApp)
-            {
-                exitFromApp=false;
-                spinner_copmany.setEnabled(true);
-                spinner_station.setEnabled(true);
-                spinner_city.setEnabled(true);
-                spinner_line.setEnabled(true);
-                getCompanyFromServer();
-            }
-        }
-    }
 
     // =============================================================
     // GPS
     // =============================================================
     private void getLocationFromSystem() {
-        // the function get the location from GPS
+        // the function get the location from GPS and start the service
 
         boolean isGPSAvailable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         boolean isWIFIAvailable = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
@@ -441,10 +440,12 @@ public class MainActivity extends Activity implements View.OnClickListener{
                     if (permissionGranted) {
 
                         StopData tempStop=null;
-                        tempStop=_stopsList.get((int) spinner_station.getSelectedItemId());
+                        tempStop=_stopsList.get((int) spinner_station.getSelectedItemId());//station info
 
                         Intent service=new Intent(getBaseContext(), MyService.class);
                         JSONObject obj = (tempStop.convertToJSON(tempStop));
+
+                        //put to Bundle
                         service.putExtra("object", obj.toString());
                         service.putExtra("distanceFrom",distanceFrom);
                         service.putExtra("checkBoxNoti",checkBoxNoti);
@@ -459,7 +460,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                         btSave.setEnabled(false);
                         btCancel.setEnabled(true);
 
-                        startService(service);
+                        startService(service);//start server
                     }
                 }
             });
@@ -470,7 +471,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
         }
     }
     private void showSettingsAlert() {
-        //the function show a alert dialog-of setting
+        //the function show a alert dialog-of setting(if the GPS is off)
+
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
 
         // Setting Dialog Title

@@ -67,8 +67,8 @@ public class Setting extends Activity implements View.OnClickListener{
             Toast.makeText(getApplicationContext(), "can't be empty \n Integer ", Toast.LENGTH_SHORT).show();
         }
     }
-
     private void Initialization() {
+        //set Shared Preferences-for save the setting
         sharedPref = getSharedPreferences("prefDistanceFromStation", MODE_PRIVATE);
         editor = sharedPref.edit();
 
@@ -88,7 +88,6 @@ public class Setting extends Activity implements View.OnClickListener{
             chAlertClock.setChecked(true);
         else
             chAlertClock.setChecked(false);
-
 
 
         etDistance.setText(Integer.toString(sharedPref.getInt("DistanceFrom", 200)));//get the date from sharedPref
