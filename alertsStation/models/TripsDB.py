@@ -64,6 +64,18 @@ class Trips(ndb.Model):
                     temp['stop_lon']=stops.stop_lon
                     list.append(temp)
 
+            for temp in list:
+                temp['stop_sequence']=int(temp['stop_sequence'])
+
+            for i in range(0, len(list)):
+                for j in range(0, len(list)-1):
+                    if (list[j]['stop_sequence']>list[j+1]['stop_sequence']):
+                        tempOb=list[j]
+                        list[j]=list[j+1]
+                        list[j+1]=tempOb
+
+
+
         reply_json=json.dumps(list,ensure_ascii=False)
         return reply_json
 
