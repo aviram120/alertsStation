@@ -39,6 +39,8 @@ public class MyService extends Service implements LocationListener{
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
 
+    private MyListenerAlertIsOff mListeners;
+
     public IBinder onBind(Intent arg0) {
         return null;
     }
@@ -68,6 +70,12 @@ public class MyService extends Service implements LocationListener{
     public int onStartCommand(Intent intent, int flags, int startId) {
         //start the Service
 
+        try {
+            mListeners = (MyListenerAlertIsOff) getApplicationContext();
+        } catch (ClassCastException e) {
+
+        }
+
         // Let it continue running until it is stopped.
         Log.i("aviramLog", "flags " + flags);
         Log.i("aviramLog", "startId " + startId);
@@ -94,6 +102,8 @@ public class MyService extends Service implements LocationListener{
         //stop the service
 
         super.onDestroy();
+
+        mListeners.onAlertIsOffListener();
         try
         {
             locationManager.removeUpdates(mLocationListener);

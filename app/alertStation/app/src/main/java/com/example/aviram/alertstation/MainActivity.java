@@ -40,7 +40,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends Activity implements View.OnClickListener{
+public class MainActivity extends Activity implements View.OnClickListener,MyListenerAlertIsOff{
     private final String SERVER_URL="http://alertsstation-1172.appspot.com";
     private Spinner spinner_copmany,spinner_city,spinner_line,spinner_station;
     private Button btSave,btCancel;
@@ -200,6 +200,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 getCompanyFromServer();
             }
         }
+    }
+
+    public void onAlertIsOffListener(){
+        btSave.setEnabled(true);
+        btCancel.setEnabled(false);
     }
 
 
