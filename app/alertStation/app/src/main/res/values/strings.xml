@@ -7,6 +7,9 @@
     <string name="settings">הגדרות</string>
     <string name="settingsDistanceFromStation">מרחק מתחנה:</string>
     <string name="btSave">שמירה</string>
+    <string name="alertType">סוגי התראות</string>
+    <string name="notification">התראה</string>
+    <string name="alertClock">שעון מעורר</string>
 
     <string name="title_activity_home_page">HomePage</string>
 
@@ -21,5 +24,6 @@
     <string name="alertIsOn">התראה מופעלת</string>
     <string name="alertIsOff">התראה מופסקת</string>
     <string name="NotificatioText">הגעת ליעד!</string>
+    <string name="station">תחנת:</string>
 
 </resources>

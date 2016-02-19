@@ -28,6 +28,29 @@
         android:text="@string/settingsDistanceFromStation"
         android:id="@+id/textViewDistance" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/alertType"
+        android:id="@+id/textView5"
+        android:layout_gravity="center_horizontal" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/notification"
+        android:id="@+id/checkBoxNoti"
+        android:layout_gravity="center_horizontal" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/alertClock"
+        android:id="@+id/checkBoxAlertClock"
+        android:layout_gravity="center_horizontal"
+        android:checked="false" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

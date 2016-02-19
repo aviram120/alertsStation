@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ public class Setting extends Activity implements View.OnClickListener{
     private Button btSave;
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
+    CheckBox chNoti,chAlertClock;
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -32,6 +34,23 @@ public class Setting extends Activity implements View.OnClickListener{
             int levelNum=Integer.parseInt(stDistance);//get the date form the field
             if (levelNum>0)//check if the user add ok number
             {
+                if (chNoti.isChecked())
+                {
+                    editor.putInt("CheckBoxNoti",1);//put the date in sharedPref
+                }
+                else
+                {
+                    editor.putInt("CheckBoxNoti",0);//put the date in sharedPref
+                }
+                if (chAlertClock.isChecked())
+                {
+                    editor.putInt("CheckBoxchAlertClock",1);//put the date in sharedPref
+                }
+                else
+                {
+                    editor.putInt("CheckBoxchAlertClock",0);//put the date in sharedPref
+                }
+
                 editor.putInt("DistanceFrom",levelNum);//put the date in sharedPref
                 editor.apply();
 
@@ -48,14 +67,28 @@ public class Setting extends Activity implements View.OnClickListener{
             Toast.makeText(getApplicationContext(), "can't be empty \n Integer ", Toast.LENGTH_SHORT).show();
         }
     }
-
     private void Initialization() {
+        //set Shared Preferences-for save the setting
+        sharedPref = getSharedPreferences("prefDistanceFromStation", MODE_PRIVATE);
+        editor = sharedPref.edit();
+
         etDistance=(EditText)findViewById(R.id.editTextDes);
         btSave=(Button)findViewById(R.id.btSaveDes);
         btSave.setOnClickListener(this);
 
-        sharedPref = getSharedPreferences("prefDistanceFromStation", MODE_PRIVATE);
-        editor = sharedPref.edit();
+        chNoti=(CheckBox)findViewById(R.id.checkBoxNoti);
+        chAlertClock=(CheckBox)findViewById(R.id.checkBoxAlertClock);
+
+        if ((sharedPref.getInt("CheckBoxNoti", 1)==1))
+            chNoti.setChecked(true);
+        else
+            chNoti.setChecked(false);
+
+        if ((sharedPref.getInt("CheckBoxchAlertClock", 0)==1))
+            chAlertClock.setChecked(true);
+        else
+            chAlertClock.setChecked(false);
+
 
         etDistance.setText(Integer.toString(sharedPref.getInt("DistanceFrom", 200)));//get the date from sharedPref
     }

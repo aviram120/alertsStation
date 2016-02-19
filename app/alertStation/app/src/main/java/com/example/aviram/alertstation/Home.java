@@ -19,8 +19,7 @@ public class Home extends Activity implements View.OnClickListener
         setContentView(R.layout.home);
         Initialization();
     }
-    private void Initialization()
-    {
+    private void Initialization() {
         btApp=(Button)findViewById(R.id.buttonTOapp);
         btApp.setOnClickListener(this);
 

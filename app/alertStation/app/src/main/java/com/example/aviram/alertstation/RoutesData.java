@@ -12,8 +12,7 @@ public class RoutesData  {
     private String route_short_name;
     private int indexInList;
 
-    public RoutesData(JSONObject jsonObject,int indexInList)
-    {
+    public RoutesData(JSONObject jsonObject,int indexInList) {
         try
         {
             int routes_id = jsonObject.getInt("route_id");
@@ -28,7 +27,6 @@ public class RoutesData  {
 
         }
     }
-
     public int getRoute_id() {
         return route_id;
     }
