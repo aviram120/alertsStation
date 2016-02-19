@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -38,8 +39,6 @@ public class MyService extends Service implements LocationListener{
 
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
-
-    private MyListenerAlertIsOff mListeners;
 
     public IBinder onBind(Intent arg0) {
         return null;
@@ -70,16 +69,14 @@ public class MyService extends Service implements LocationListener{
     public int onStartCommand(Intent intent, int flags, int startId) {
         //start the Service
 
-        try {
-            mListeners = (MyListenerAlertIsOff) getApplicationContext();
-        } catch (ClassCastException e) {
-
-        }
 
         // Let it continue running until it is stopped.
         Log.i("aviramLog", "flags " + flags);
         Log.i("aviramLog", "startId " + startId);
-        Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
+
+        //Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
+         Toast.makeText(this,this.getString(R.string.alertIsOn), Toast.LENGTH_SHORT).show();
+
         this.intent = intent;
 
         sharedPref = getSharedPreferences("prefDistanceFromStation", MODE_PRIVATE);
@@ -103,15 +100,16 @@ public class MyService extends Service implements LocationListener{
 
         super.onDestroy();
 
-        mListeners.onAlertIsOffListener();
         try
         {
             locationManager.removeUpdates(mLocationListener);
         } catch (SecurityException e) {   }
 
-        editor.putInt("alertStatus",0);
+        editor.putInt("alertStatus", 0);
         editor.apply();
-        Toast.makeText(this, "Service Destroyed", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Service Destroyed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,this.getString(R.string.alertIsOff), Toast.LENGTH_SHORT).show();
+
     }
     private static void notify(Context context, String title, String text) {
         //set Notification
@@ -149,9 +147,14 @@ public class MyService extends Service implements LocationListener{
             if (checkBoxchAlertClock==1)
                 startAlarm();
 
+            //sent to activity that finish
+            Intent intent = new Intent("MainActivity");
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
             stopSelf();//stop the Service
         }
     }
+
 
 
     // =============================================================

@@ -3,15 +3,18 @@ package com.example.aviram.alertstation;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import android.view.Menu;
@@ -40,7 +43,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends Activity implements View.OnClickListener,MyListenerAlertIsOff{
+public class MainActivity extends Activity implements View.OnClickListener{
     private final String SERVER_URL="http://alertsstation-1172.appspot.com";
     private Spinner spinner_copmany,spinner_city,spinner_line,spinner_station;
     private Button btSave,btCancel;
@@ -80,10 +83,7 @@ public class MainActivity extends Activity implements View.OnClickListener,MyLis
             btSave.setEnabled(false);
             btCancel.setEnabled(true);
 
-            spinner_copmany.setEnabled(false);
-            spinner_station.setEnabled(false);
-            spinner_city.setEnabled(false);
-            spinner_line.setEnabled(false);
+            setSpinner(false);
 
             exitFromApp=true;
         }
@@ -91,6 +91,10 @@ public class MainActivity extends Activity implements View.OnClickListener,MyLis
         {
             getCompanyFromServer();
         }
+
+        //for communication with service
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                mMessageReceiver, new IntentFilter("MainActivity"));
 
     }
     public void addItemsOnSpinner(Spinner spinner_id,List<String> list) {
@@ -178,34 +182,40 @@ public class MainActivity extends Activity implements View.OnClickListener,MyLis
         if (v.getId() == R.id.btSave)//start alert
         {
             dialog.dismiss();
+            setSpinner(false);
             getLocationFromSystem();//check if GPS in on- and start service
         }
         if (v.getId()==R.id.btCancel) {
             btSave.setEnabled(true);
             btCancel.setEnabled(false);
+            setSpinner(true);
 
             stopService(new Intent(getBaseContext(), MyService.class));
-
-            /*
-            Toast.makeText(activity.getApplicationContext(),this.getString(R.string.alertIsOff), Toast.LENGTH_SHORT).show();
-            */
 
             if (exitFromApp)//if the user exit from the app
             {
                 exitFromApp=false;
-                spinner_copmany.setEnabled(true);
-                spinner_station.setEnabled(true);
-                spinner_city.setEnabled(true);
-                spinner_line.setEnabled(true);
+                setSpinner(true);
                 getCompanyFromServer();
             }
         }
     }
-
-    public void onAlertIsOffListener(){
-        btSave.setEnabled(true);
-        btCancel.setEnabled(false);
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        //the function make communication with the service- when the service is done(killed)
+        public void onReceive(Context context, Intent intent) {
+            Log.i("aviramLog", "activity-get the data from service");
+            btSave.setEnabled(true);
+            btCancel.setEnabled(false);
+            setSpinner(true);
+        }
+    };
+    private void setSpinner(boolean flag) {
+        spinner_copmany.setEnabled(flag);
+        spinner_station.setEnabled(flag);
+        spinner_city.setEnabled(flag);
+        spinner_line.setEnabled(flag);
     }
+
 
 
     // =============================================================
@@ -459,9 +469,7 @@ public class MainActivity extends Activity implements View.OnClickListener,MyLis
                         editor.putInt("alertStatus",1);
                         editor.apply();
 
-                        /*
-                        Toast.makeText(activity.getApplicationContext(),this.getString(R.string.alertIsOn), Toast.LENGTH_SHORT).show();
-                        */
+
                         btSave.setEnabled(false);
                         btCancel.setEnabled(true);
 
