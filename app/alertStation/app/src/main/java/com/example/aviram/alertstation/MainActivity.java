@@ -100,8 +100,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
     public void addItemsOnSpinner(Spinner spinner_id,List<String> list) {
         //the function put list to spinner
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, list);//TODO change the design
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.layout.spinner_item, list);
+        dataAdapter.setDropDownViewResource(R.layout.spinner_item);
         spinner_id.setAdapter(dataAdapter);
     }
     private void initialization() {

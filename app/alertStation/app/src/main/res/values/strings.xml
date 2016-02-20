@@ -26,4 +26,6 @@
     <string name="NotificatioText">הגעת ליעד!</string>
     <string name="station">תחנת:</string>
 
+    <string name="choose_station">בחר תחנה:</string>
+
 </resources>
