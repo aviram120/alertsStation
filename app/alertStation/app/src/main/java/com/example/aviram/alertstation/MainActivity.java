@@ -462,17 +462,18 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
                         //put to Bundle
                         service.putExtra("object", obj.toString());
-                        service.putExtra("distanceFrom",distanceFrom);
-                        service.putExtra("checkBoxNoti",checkBoxNoti);
-                        service.putExtra("checkBoxchAlertClock",checkBoxchAlertClock);
+                        service.putExtra("distanceFrom", distanceFrom);
+                        service.putExtra("checkBoxNoti", checkBoxNoti);
+                        service.putExtra("checkBoxchAlertClock", checkBoxchAlertClock);
 
-                        editor.putInt("alertStatus",1);
+                        editor.putInt("alertStatus", 1);
                         editor.apply();
 
 
                         btSave.setEnabled(false);
                         btCancel.setEnabled(true);
 
+                        Toast.makeText(activity,getString(R.string.alertIsOn), Toast.LENGTH_SHORT).show();
                         startService(service);//start server
                     }
                 }

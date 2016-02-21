@@ -74,9 +74,6 @@ public class MyService extends Service implements LocationListener{
         Log.i("aviramLog", "flags " + flags);
         Log.i("aviramLog", "startId " + startId);
 
-        //Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
-         Toast.makeText(this,this.getString(R.string.alertIsOn), Toast.LENGTH_SHORT).show();
-
         this.intent = intent;
 
         sharedPref = getSharedPreferences("prefDistanceFromStation", MODE_PRIVATE);
@@ -107,7 +104,7 @@ public class MyService extends Service implements LocationListener{
 
         editor.putInt("alertStatus", 0);
         editor.apply();
-        //Toast.makeText(this, "Service Destroyed", Toast.LENGTH_SHORT).show();
+
         Toast.makeText(this,this.getString(R.string.alertIsOff), Toast.LENGTH_SHORT).show();
 
     }
@@ -169,7 +166,7 @@ public class MyService extends Service implements LocationListener{
         stationLocation.setLongitude(stopData.getStop_lon());
 
         float distance=userLocation.distanceTo(stationLocation);
-        Toast.makeText(this, "distance"+distance, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "distance"+distance, Toast.LENGTH_SHORT).show();
         Log.i("aviramLog", "distance " + distance);
         Log.i("aviramLog", "location" + userLocation);
 

@@ -13,50 +13,122 @@
         android:id="@+id/textView2"
         android:layout_gravity="center_horizontal" />
 
-    <EditText
-        android:layout_width="173dp"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
-        android:ems="10"
-        android:id="@+id/editTextDes"
-        android:layout_gravity="right" />
+        android:weightSum="4">
 
-    <TextView
-        android:layout_width="211dp"
-        android:layout_height="58dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/settingsDistanceFromStation"
-        android:id="@+id/textViewDistance" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="1">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/textView11" />
+        </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/alertType"
-        android:id="@+id/textView5"
-        android:layout_gravity="center_horizontal" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="1">
 
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/notification"
-        android:id="@+id/checkBoxNoti"
-        android:layout_gravity="center_horizontal" />
+            <TextView
+                android:layout_width="49dp"
+                android:layout_height="39dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
 
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/alertClock"
-        android:id="@+id/checkBoxAlertClock"
-        android:layout_gravity="center_horizontal"
-        android:checked="false" />
+                android:id="@+id/textViewDistance1"
+                android:layout_weight="0.32" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btSave"
-        android:id="@+id/btSaveDes"
-        android:layout_gravity="center_horizontal" />
+            <EditText
+                android:layout_width="94dp"
+                android:layout_height="match_parent"
+                android:inputType="numberDecimal"
+                android:ems="10"
+                android:weightSum="1"
+                android:id="@+id/editTextDes"
+                android:layout_gravity="start"
+                />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="39dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/settingsDistanceFromStation"
+                android:id="@+id/textViewDistance"
+                 />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="1">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/textView10" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/alertType"
+            android:id="@+id/textView5"
+            android:layout_gravity="center_horizontal" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="1">
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/notification"
+                android:id="@+id/checkBoxNoti"
+                android:layout_gravity="center_horizontal" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/alertClock"
+                android:id="@+id/checkBoxAlertClock"
+                android:layout_gravity="center_horizontal"
+                android:checked="false" />
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="1">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/textView12" />
+        </LinearLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btSave"
+            android:id="@+id/btSaveDes"
+            android:layout_gravity="center_horizontal" />
+
+    </LinearLayout>
+
 
 
 </LinearLayout>
