@@ -10,10 +10,15 @@
 ישומים בשימוש:
 
 GPS- קבלת מיקום של המשתמש.
+<br>
 Service- הרצת 'תהליך' ברקע (גם אם  MainActivityנסגר).
+<br>
 Notification- התראה למשתמש.
+<br>
 Media Player- השמעת צלצול.
+<br>
 Shared Preferences- 'זיכרון משותף' – להגדרות האפליקציה.
-Volley Request- שליחת בקשות API.
+<br>
+Volley Request- שליחת בקשות API.<br>
 
 API (use GAE)- בניית שרת שמכיל את מבנה הנתונים של חברות תחבורה/ מסלולי אוטובוסים/תחנות עצירה.
